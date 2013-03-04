@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Architecting Event-Driven Web, Mobile, and RESTful Apps</title>
+
+    <meta name="description" content="Non-blocking, asynchronous, and reactive are all the rage today. This session will explore why the patterns are important in modern apps and how to apply them to event-driven web, mobile, and RESTful apps. To illustrate the concepts, Java, Scala, Akka, and Play Framework will be used as examples.">
+    <meta name="author" content="James Ward">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+        document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+    .reveal .controls {
+        bottom: auto;
+        top: 0px;
+    }
+    </style>
+</head>
+<body>
+
+<div class="reveal">
+
+<aside style="display: block; position: fixed; bottom: 5px; left: 10px; z-index: 30;">
+    <a href="http://typesafe.com"><img src="assets/logo.png"></a>
+</aside>
+
+<aside style="display: block; position: fixed; bottom: 10px; right: 10px; z-index: 30;">
+    <a href="http://twitter.com/_JamesWard"  style="font-size: 20px;">@_JamesWard</a>
+</aside>
+
+
+<div class="slides">
+
+<section>
+    <h2>Architecting Event-Driven Web,<br/>Mobile, and RESTful Apps</h2>
+    <h3><a href="http://www.jamesward.com">James Ward</a></h3>
+</section>
+
+<section>
+    <h2>Event-Driven Web Architecture</h2>
+    <iframe src="http://prezi.com/embed/0oqnmj__vzjh/?bgcolor=ffffff&amp;lock_to_path=1&amp;autoplay=no&amp;autohide_ctrls=0" width="550" height="400" frameBorder="0"></iframe>
+</section>
+
+<section>
+    <h2>Event-Driven Use Cases</h2>
+    <ul>
+        <li class="fragment">Compositional</li>
+        <li class="fragment">Non-Blocking</li>
+        <li class="fragment">Real-Time</li>
+    </ul>
+</section>
+
+<section>
+    <section>
+        <h2>Scala</h2>
+        <h4>The Modern JVM Language</h4>
+        <ul>
+            <li class="fragment">Type-safe, Functional & Object Oriented</li>
+            <li class="fragment">Interop with Java Libraries</li>
+            <li class="fragment">Concise expressions for complex behavior</li>
+            <li class="fragment">Built-in library for handling concurrency & asynchronous tasks</li>
+        </ul>
+    </section>
+    <section>
+        <h2>Basic App</h2>
+        <pre><code>object Hello extends App {
+  println("hello, world")
+}</code></pre>
+    </section>
+    <section>
+        <h2>Case Classes</h2>
+        <pre><code>
+case class Greeting(name: String) {
+  def sayHello = "hello, " + name
+}
+
+object Hello extends App {
+  val greeting = Greeting("James")
+  println(greeting.sayHello)
+}
+</code></pre>
+    </section>
+    <section>
+        <h2>Futures</h2>
+        <p>Built-in Multi-Threading</p>
+        <pre><code>import scala.concurrent._
+import ExecutionContext.Implicits.global
+
+def pause(msg: String, duration: Int) = {
+  println(s"pausing for $duration seconds")
+  Thread.sleep(1000 * duration)
+  println(s"paused for $duration seconds")
+  msg
+}
+
+val aa: Future[String] = future { pause("three", 3) }
+val bb: Future[String] = future { pause("one", 1) }
+val cc: Future[String] = future { pause("two", 2) }
+
+println(Await.result(aa, duration.Duration.Inf))
+println(Await.result(bb, duration.Duration.Inf))
+println(Await.result(cc, duration.Duration.Inf))</code></pre>
+    </section>
+    <section>
+        <h2>For Comprehensions</h2>
+        <p></p>
+        <pre><code>for {
+  j <- 1 to 3
+  k <- j to 3
+} yield k</code></pre>
+    </section>
+</section>
+
+<section>
+    <h2>Play Framework</h2>
+    <h4>The High Velocity Web Framework For Java and Scala</h4>
+    <ul>
+        <li class="fragment">"Just Hit Refresh" Workflow</li>
+        <li class="fragment">Scalable: Asynchronous, Non-Blocking, & Real-time</li>
+        <li class="fragment">Modern Web: REST + JSON & Asset Compilers</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Techniques</h2>
+    <ul>
+        <li class="fragment">Async</li>
+        <li class="fragment">Reactive = Async + Non-Blocking</li>
+        <li class="fragment">Messaging: Comet, SSE, WebSockets</li>
+    </ul>
+</section>
+</div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.min.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: false,
+        rollingLinks: false,
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+            { src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+            { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+            { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+            // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+    });
+
+</script>
+
+</body>
+</html>
